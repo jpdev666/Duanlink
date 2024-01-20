@@ -17,6 +17,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	if err = NewDatastore(cfg); err != nil {
+		log.Fatal(err)
+	}
+
 	router := gin.Default()
 	router.GET("/", func(c *gin.Context) {
 		time.Sleep(5 * time.Second)
