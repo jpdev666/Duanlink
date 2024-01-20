@@ -3,12 +3,21 @@ package main
 import "github.com/spf13/viper"
 
 type Config struct {
-	API API
+	API   API
+	MySQL MySQL
 }
 
 type API struct {
 	Host string
 	Port string
+}
+
+type MySQL struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Database string
 }
 
 func Load() (*Config, error) {
