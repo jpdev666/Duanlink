@@ -10,15 +10,17 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ved2pj/Duanlink/config"
+	"github.com/ved2pj/Duanlink/internal/datastore"
 )
 
 func main() {
-	cfg, err := Load()
+	cfg, err := config.Load()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if err = NewDatastore(cfg); err != nil {
+	if err = datastore.NewDatastore(cfg); err != nil {
 		log.Fatal(err)
 	}
 
