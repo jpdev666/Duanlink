@@ -12,6 +12,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ved2pj/Duanlink/config"
 	"github.com/ved2pj/Duanlink/internal/datastore"
+	"github.com/ved2pj/Duanlink/internal/handlers"
+	"github.com/ved2pj/Duanlink/internal/repos"
+	"github.com/ved2pj/Duanlink/internal/services"
 )
 
 func main() {
@@ -24,11 +27,12 @@ func main() {
 		log.Fatal(err)
 	}
 
+	shortLinkRepo := repos.NewShortLinkRepo(datastore.Get().MySQL)
+	shortLinkService := services.NewShortLinkService(shortLinkRepo)
+	shortLinkHandler := handlers.NewShortLinkHandler(shortLinkService)
+
 	router := gin.Default()
-	router.GET("/", func(c *gin.Context) {
-		time.Sleep(5 * time.Second)
-		c.String(http.StatusOK, "Welcome Gin Server")
-	})
+	router.GET("/shortlinks", shortLinkHandler.Create)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf("%s:%s", cfg.API.Host, cfg.API.Port),

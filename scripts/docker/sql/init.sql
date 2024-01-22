@@ -1,13 +1,12 @@
-CREATE
-DATABASE IF NOT EXISTS duanlink;
-USE
-duanlink;
+CREATE DATABASE IF NOT EXISTS duanlink;
+USE duanlink;
 -- 创建短链信息表 short_links
 CREATE TABLE `short_links`
 (
-    `short_link_id` varchar(32)   NOT NULL,
-    `original_url`  varchar(2048) NOT NULL,
-    `create_at`     datetime      NOT NULL,
-    `expire_at`     datetime DEFAULT NULL,
-    PRIMARY KEY (`short_link_id`)
+    `id` int(11)   NOT NULL AUTO_INCREMENT,
+    `short_code`     varchar(32)   NOT NULL,
+    `origin_url`  varchar(2048) NOT NULL,
+    `created_at`     datetime      NOT NULL,
+    `updated_at`     datetime NOT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
