@@ -1,19 +1,29 @@
 package utils
 
 import (
-	"encoding/hex"
 	"math/rand"
+	"strings"
 	"time"
 )
 
+const base62Chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
 func GenerateShortCode() string {
 	rand.NewSource(time.Now().UnixNano())
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	randomNumber := rand.Int63n(62 * 62 * 62 * 62 * 62 * 62)
+	return encodeBase62(randomNumber)
+}
 
-	b := make([]rune, 8)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+func encodeBase62(number int64) string {
+	if number == 0 {
+		return string(base62Chars[0])
 	}
-
-	return time.Now().Format("20060102") + hex.EncodeToString([]byte(string(b)))
+	var encodedBuilder strings.Builder
+	base := int64(len(base62Chars))
+	for number > 0 {
+		remainder := number % base
+		number /= base
+		encodedBuilder.WriteByte(base62Chars[remainder])
+	}
+	return encodedBuilder.String()
 }
