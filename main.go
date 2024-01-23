@@ -32,7 +32,7 @@ func main() {
 	shortLinkHandler := handlers.NewShortLinkHandler(shortLinkService)
 
 	router := gin.Default()
-	router.GET("/shortlinks", shortLinkHandler.Create)
+	router.POST("/shortlinks", shortLinkHandler.Create)
 
 	srv := &http.Server{
 		Addr:    fmt.Sprintf("%s:%s", cfg.API.Host, cfg.API.Port),
