@@ -46,3 +46,14 @@ func (handler *ShortLinkHandler) Lookup(c *gin.Context) {
 		c.JSON(http.StatusOK, shortLink)
 	}
 }
+
+func (handler *ShortLinkHandler) Redirect(c *gin.Context) {
+	shortCode := c.Param("short_code")
+	if shortLink, err := handler.shortLinkService.LookupByShortCode(shortCode); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+	} else {
+		c.Redirect(http.StatusFound, shortLink.OriginURL)
+	}
+}

@@ -36,7 +36,7 @@ func (s *shortLinkService) Create(req models.CreateShortLinkRequest) (*models.Cr
 	}
 	return &models.CreateShortLinkResponse{
 		ShortLinkID: shortLink.ID,
-		ShortLink:   fmt.Sprintf("http://127.0.0.1/%s", shortLink.ShortCode),
+		ShortLink:   fmt.Sprintf("http://127.0.0.1:8080/%s", shortLink.ShortCode),
 		OriginURL:   req.OriginURL,
 	}, nil
 }
