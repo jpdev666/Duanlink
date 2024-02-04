@@ -10,6 +10,7 @@ type ShortLink struct {
 	OriginURL string `gorm:"index"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	ExpiredAt *time.Time
 }
 
 func (s *ShortLink) TableName() string {

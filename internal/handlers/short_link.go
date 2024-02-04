@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"github.com/ved2pj/Duanlink/internal/models"
 	"github.com/ved2pj/Duanlink/internal/services"
 )
@@ -38,22 +39,37 @@ func (handler *ShortLinkHandler) Create(c *gin.Context) {
 
 func (handler *ShortLinkHandler) Lookup(c *gin.Context) {
 	shortCode := c.Param("short_code")
-	if shortLink, err := handler.shortLinkService.LookupByShortCode(shortCode); err != nil {
+	shortLink, err := handler.shortLinkService.LookupByShortCode(shortCode)
+	if err != nil {
+		if errors.Is(err, models.ErrorShortLinkExpired) {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
-	} else {
-		c.JSON(http.StatusOK, shortLink)
+		return
+
 	}
+	c.JSON(http.StatusOK, shortLink)
 }
 
 func (handler *ShortLinkHandler) Redirect(c *gin.Context) {
 	shortCode := c.Param("short_code")
-	if shortLink, err := handler.shortLinkService.LookupByShortCode(shortCode); err != nil {
+	shortLink, err := handler.shortLinkService.LookupByShortCode(shortCode)
+	if err != nil {
+		if errors.Is(err, models.ErrorShortLinkExpired) {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
 		})
-	} else {
-		c.Redirect(http.StatusFound, shortLink.OriginURL)
+		return
 	}
+	c.Redirect(http.StatusFound, shortLink.OriginURL)
 }

@@ -10,3 +10,5 @@ CREATE TABLE `short_links`
     `updated_at`     datetime NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `short_links` ADD COLUMN `expires_at` datetime;

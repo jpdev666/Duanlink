@@ -29,6 +29,7 @@ func (s *shortLinkService) Create(req models.CreateShortLinkRequest) (*models.Cr
 		OriginURL: req.OriginURL,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
+		ExpiredAt: req.ExpiredAt,
 	}
 
 	if err := s.repo.Create(shortLink); err != nil {
@@ -42,5 +43,12 @@ func (s *shortLinkService) Create(req models.CreateShortLinkRequest) (*models.Cr
 }
 
 func (s *shortLinkService) LookupByShortCode(shortCode string) (*db_models.ShortLink, error) {
-	return s.repo.LookupByShortCode(shortCode)
+	shortLink, err := s.repo.LookupByShortCode(shortCode)
+	if err != nil {
+		return nil, err
+	}
+	if shortLink.ExpiredAt != nil && shortLink.ExpiredAt.Before(time.Now()) {
+		return nil, models.ErrorShortLinkExpired
+	}
+	return shortLink, nil
 }
