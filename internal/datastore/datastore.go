@@ -3,6 +3,7 @@ package datastore
 import (
 	"fmt"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/ved2pj/Duanlink/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -12,6 +13,7 @@ var _datastore *DataStore
 
 type DataStore struct {
 	MySQL *gorm.DB
+	Redis *redis.Client
 }
 
 func NewDatastore(cfg *config.Config) error {
@@ -22,8 +24,15 @@ func NewDatastore(cfg *config.Config) error {
 		return err
 	}
 
+	redisCli := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
 	_datastore = &DataStore{
 		MySQL: db,
+		Redis: redisCli,
 	}
 	return nil
 }

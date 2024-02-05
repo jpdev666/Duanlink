@@ -5,6 +5,7 @@ import "github.com/spf13/viper"
 type Config struct {
 	API   API
 	MySQL MySQL
+	Redis Redis
 }
 
 type API struct {
@@ -18,6 +19,12 @@ type MySQL struct {
 	User     string
 	Password string
 	Database string
+}
+
+type Redis struct {
+	Addr     string
+	Password string
+	DB       int
 }
 
 func Load() (*Config, error) {
